@@ -21,9 +21,11 @@ import static org.rsa.util.ConversionUtil.parseIntFromString;
 
 public class ClosePostAsSpamContextItem extends MessageContextObject {
 
+    private final ReputationManager reputationManager;
     public ClosePostAsSpamContextItem()
     {
         super("Close As Spam");
+        this.reputationManager = new ReputationManager();
     }
 
     private boolean findRole(Member member, String id) {
@@ -45,11 +47,11 @@ public class ClosePostAsSpamContextItem extends MessageContextObject {
         String guildId = Objects.requireNonNull(event.getGuild()).getId();
         GuildConfiguration guildConfiguration = GuildConfigurationManager.fetch(guildId);
 
-        UserReputation posterReputation = ReputationManager.fetch(guildId, poster.getId());
+        UserReputation posterReputation = reputationManager.fetch(guildId, poster.getId());
         posterReputation.setReceived_spam_flags(posterReputation.getReceived_spam_flags() + 1);
         posterReputation.setReputation(posterReputation.getReputation() + parseIntFromString(guildConfiguration.getValue(GuildConfigurationConstant.FLAGGED_SPAM.getKey())));
 
-        ReputationManager.update(posterReputation);
+        reputationManager.update(posterReputation);
     }
 
     @Override

@@ -4,7 +4,9 @@ import org.panda.jda.command.CommandObjectV2;
 import org.rsa.command.backup.BackupCommand;
 import org.rsa.command.compile.CompileCommand;
 import org.rsa.command.configure.ConfigureCommand;
+import org.rsa.command.helped.HelpedCommand;
 import org.rsa.command.reputation.ReputationCommand;
+import org.rsa.logic.data.managers.ReputationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ public class Commands {
         addCommandObject(new ConfigureCommand());
         addCommandObject(new ReputationCommand());
         addCommandObject(new CompileCommand());
+        addCommandObject(new HelpedCommand(new ReputationManager()));
     }
 
     private static void addCommandObject(CommandObjectV2 commandObjectV2) {

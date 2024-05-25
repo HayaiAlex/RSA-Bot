@@ -17,7 +17,7 @@ public class RequestsManager<T> {
 
     public RequestsManager(String tableName, Class<T> type)
     {
-        this.table = DynamoDB.GetDynamoTable(tableName, TableSchema.fromBean(type));
+        this.table = DynamoDB.getDynamoTable(tableName, TableSchema.fromBean(type));
         this.classType = type;
     }
 

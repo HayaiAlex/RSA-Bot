@@ -18,8 +18,7 @@ public class DynamoDB {
                 .build();
     }
 
-    public static <T> DynamoDbTable<T> GetDynamoTable(String tableName, TableSchema<T> schema)
-    {
+    public static <T> DynamoDbTable<T> getDynamoTable(String tableName, TableSchema<T> schema) {
         DynamoDbEnhancedClient enhancedClient = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(getDynamoDbClient()).build();
         return enhancedClient.table(tableName, schema);
@@ -34,7 +33,7 @@ public class DynamoDB {
             System.out.println(tableName +" was successfully updated. The request id is "+response.responseMetadata().requestId());
             return new PutItemResponseWithStatus(response, false, "");
         } catch (ResourceNotFoundException e) {
-            String errorMessage = String.format("Error: The Amazon DynamoDB table \"%s\" can't be found.\n", tableName);
+            String errorMessage = String.format("Error: The Amazon DynamoDB table \"%s\" can't be found.%n", tableName);
             System.err.format(errorMessage);
             System.err.println("Be sure that it exists and that you've typed its name correctly!");
             return new PutItemResponseWithStatus(null, true, errorMessage);
@@ -53,7 +52,7 @@ public class DynamoDB {
             System.out.println(tableName +" was successfully updated. The request id is "+response.responseMetadata().requestId());
             return new DeleteItemResponseWithStatus(response, false, "");
         } catch (ResourceNotFoundException e) {
-            String errorMessage = String.format("Error: The Amazon DynamoDB table \"%s\" can't be found.\n", tableName);
+            String errorMessage = String.format("Error: The Amazon DynamoDB table \"%s\" can't be found.%n", tableName);
             System.err.format(errorMessage);
             System.err.println("Be sure that it exists and that you've typed its name correctly!");
             return new DeleteItemResponseWithStatus(null, true, errorMessage);
@@ -77,7 +76,7 @@ public class DynamoDB {
             System.out.println(tableName +" was successfully updated. The request id is "+response.responseMetadata().requestId());
             return new UpdateItemResponseWithStatus(response, false, "");
         } catch (ResourceNotFoundException e) {
-            String errorMessage = String.format("Error: The Amazon DynamoDB table \"%s\" can't be found.\n", tableName);
+            String errorMessage = String.format("Error: The Amazon DynamoDB table \"%s\" can't be found.%n", tableName);
             System.err.format(errorMessage);
             System.err.println("Be sure that it exists and that you've typed its name correctly!");
             return new UpdateItemResponseWithStatus(null, true, errorMessage);

@@ -42,3 +42,6 @@ It might be useful to test the bot. This can be done one of two ways:
 - All changes should go through the Pull Request life cycle.
 - [PR Template](https://github.com/RSA-Internal/RSA-Bot/tree/main/.github/pull_request_template.md)
 
+### Changelog
+#### 1.3.5
+* Add `/helped` command with a 10 minute cooldown

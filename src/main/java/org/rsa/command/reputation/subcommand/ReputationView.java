@@ -13,9 +13,12 @@ import org.rsa.translator.ReputationTranslator;
 
 public class ReputationView extends SubcommandObjectV2 {
 
-    public ReputationView() {
+    private final ReputationManager reputationManager;
+
+    public ReputationView(ReputationManager reputationManager) {
         super("view", "View a users reputation");
         addOption(OptionType.USER, "user", "View a specific users reputation (default: yourself)");
+        this.reputationManager = reputationManager;
     }
 
     @Override
@@ -24,7 +27,7 @@ public class ReputationView extends SubcommandObjectV2 {
         Guild guild = entities.getGuild();
         Member requester = entities.getRequester();
         Member otherUser = event.getOption("user", requester, OptionMapping::getAsMember);
-        UserReputation userReputation = ReputationManager.fetch(guild.getId(), otherUser.getId());
+        UserReputation userReputation = reputationManager.fetch(guild.getId(), otherUser.getId());
         event
             .replyEmbeds(ReputationTranslator.getReputationAsEmbed(guild, userReputation, requester, otherUser))
             .setEphemeral(true)

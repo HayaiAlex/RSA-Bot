@@ -18,9 +18,11 @@ import java.util.Objects;
 import static org.rsa.util.ConversionUtil.parseIntFromString;
 
 public class AcceptAnswerContextItem extends MessageContextObject {
+    private final ReputationManager reputationManager;
     public AcceptAnswerContextItem()
     {
         super("Accept Answer");
+        this.reputationManager = new ReputationManager();
     }
 
     private void manageReputationChanges(MessageContextInteractionEvent event)
@@ -28,8 +30,8 @@ public class AcceptAnswerContextItem extends MessageContextObject {
         String guildId = Objects.requireNonNull(event.getGuild()).getId();
         GuildConfiguration guildConfiguration = GuildConfigurationManager.fetch(guildId);
         
-        UserReputation receiverReputation = ReputationManager.fetch(guildId, event.getTarget().getAuthor().getId());
-        UserReputation acceptorReputation = ReputationManager.fetch(guildId, event.getUser().getId());
+        UserReputation receiverReputation = reputationManager.fetch(guildId, event.getTarget().getAuthor().getId());
+        UserReputation acceptorReputation = reputationManager.fetch(guildId, event.getUser().getId());
 
         receiverReputation.setAccepted_answers(receiverReputation.getAccepted_answers() + 1);
         receiverReputation.setReputation(receiverReputation.getReputation() + parseIntFromString(guildConfiguration.getValue(GuildConfigurationConstant.ACCEPTED_ANSWER.getKey())));
@@ -37,8 +39,8 @@ public class AcceptAnswerContextItem extends MessageContextObject {
         acceptorReputation.setOther_answers_accepted(acceptorReputation.getOther_answers_accepted() + 1);
         acceptorReputation.setReputation(acceptorReputation.getReputation() + parseIntFromString(guildConfiguration.getValue(GuildConfigurationConstant.ANSWER_ACCEPTED.getKey())));
 
-        ReputationManager.update(receiverReputation);
-        ReputationManager.update(acceptorReputation);
+        reputationManager.update(receiverReputation);
+        reputationManager.update(acceptorReputation);
     }
 
     private void acceptAnswer(MessageContextInteractionEvent event)

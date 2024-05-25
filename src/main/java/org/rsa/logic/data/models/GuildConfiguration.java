@@ -60,30 +60,30 @@ public class GuildConfiguration {
         return guildid;
     }
 
-    private Map<String, Consumer<String>> setters = new HashMap<>() {{
-       put(GuildConfigurationConstant.UPVOTE_EMOJI.getKey(), GuildConfiguration.this::setUpvote_emoji);
-       put(GuildConfigurationConstant.DOWNVOTE_EMOJI.getKey(), GuildConfiguration.this::setDownvote_emoji);
-       put(GuildConfigurationConstant.MODERATE_EMOJI.getKey(), GuildConfiguration.this::setModerate_emoji);
-       put(GuildConfigurationConstant.ACCEPT_EMOJI.getKey(), GuildConfiguration.this::setAccept_emoji);
-       put(GuildConfigurationConstant.MODERATOR_ROLE.getKey(), GuildConfiguration.this::setModerator_role_id);
-       put(GuildConfigurationConstant.HELPER_ROLE.getKey(), GuildConfiguration.this::setHelper_role_id);
-       put(GuildConfigurationConstant.RESOLVER_ROLE.getKey(), GuildConfiguration.this::setResolver_role_id);
-       put(GuildConfigurationConstant.HELP_CHANNEL.getKey(), GuildConfiguration.this::setHelp_channel_id);
-       put(GuildConfigurationConstant.REQUIRED_CHARACTERS.getKey(), GuildConfiguration.this::setReq_chars_for_help_thread);
-       put(GuildConfigurationConstant.HELP_TITLE_LENGTH.getKey(), GuildConfiguration.this::setHelp_thread_title_length);
-       put(GuildConfigurationConstant.RESOLVER_REPUTATION.getKey(), GuildConfiguration.this::setReputation_for_resolve);
-       put(GuildConfigurationConstant.HELPER_REPUTATION.getKey(), GuildConfiguration.this::setReputation_for_helping);
-       put(GuildConfigurationConstant.UPVOTE_RECEIVED.getKey(), GuildConfiguration.this::setUpvote_received);
-       put(GuildConfigurationConstant.DOWNVOTE_RECEIVED.getKey(), GuildConfiguration.this::setDownvote_received);
-       put(GuildConfigurationConstant.DOWNVOTE_GIVEN.getKey(), GuildConfiguration.this::setDownvote_given);
-       put(GuildConfigurationConstant.ANSWER_ACCEPTED.getKey(), GuildConfiguration.this::setAnswer_accepted);
-       put(GuildConfigurationConstant.ACCEPTED_ANSWER.getKey(), GuildConfiguration.this::setAccepted_answer);
-       put(GuildConfigurationConstant.QUESTION_MODERATED.getKey(), GuildConfiguration.this::setQuestion_moderated);
-       put(GuildConfigurationConstant.FLAGGED_SPAM.getKey(), GuildConfiguration.this::setFlagged_spam);
+    protected Map<String, Consumer<String>> setters = new HashMap<>() {{
+        put(GuildConfigurationConstant.UPVOTE_EMOJI.getKey(), GuildConfiguration.this::setUpvote_emoji);
+        put(GuildConfigurationConstant.DOWNVOTE_EMOJI.getKey(), GuildConfiguration.this::setDownvote_emoji);
+        put(GuildConfigurationConstant.MODERATE_EMOJI.getKey(), GuildConfiguration.this::setModerate_emoji);
+        put(GuildConfigurationConstant.ACCEPT_EMOJI.getKey(), GuildConfiguration.this::setAccept_emoji);
+        put(GuildConfigurationConstant.MODERATOR_ROLE.getKey(), GuildConfiguration.this::setModerator_role_id);
+        put(GuildConfigurationConstant.HELPER_ROLE.getKey(), GuildConfiguration.this::setHelper_role_id);
+        put(GuildConfigurationConstant.RESOLVER_ROLE.getKey(), GuildConfiguration.this::setResolver_role_id);
+        put(GuildConfigurationConstant.HELP_CHANNEL.getKey(), GuildConfiguration.this::setHelp_channel_id);
+        put(GuildConfigurationConstant.REQUIRED_CHARACTERS.getKey(), GuildConfiguration.this::setReq_chars_for_help_thread);
+        put(GuildConfigurationConstant.HELP_TITLE_LENGTH.getKey(), GuildConfiguration.this::setHelp_thread_title_length);
+        put(GuildConfigurationConstant.RESOLVER_REPUTATION.getKey(), GuildConfiguration.this::setReputation_for_resolve);
+        put(GuildConfigurationConstant.HELPER_REPUTATION.getKey(), GuildConfiguration.this::setReputation_for_helping);
+        put(GuildConfigurationConstant.UPVOTE_RECEIVED.getKey(), GuildConfiguration.this::setUpvote_received);
+        put(GuildConfigurationConstant.DOWNVOTE_RECEIVED.getKey(), GuildConfiguration.this::setDownvote_received);
+        put(GuildConfigurationConstant.DOWNVOTE_GIVEN.getKey(), GuildConfiguration.this::setDownvote_given);
+        put(GuildConfigurationConstant.ANSWER_ACCEPTED.getKey(), GuildConfiguration.this::setAnswer_accepted);
+        put(GuildConfigurationConstant.ACCEPTED_ANSWER.getKey(), GuildConfiguration.this::setAccepted_answer);
+        put(GuildConfigurationConstant.QUESTION_MODERATED.getKey(), GuildConfiguration.this::setQuestion_moderated);
+        put(GuildConfigurationConstant.FLAGGED_SPAM.getKey(), GuildConfiguration.this::setFlagged_spam);
         put(GuildConfigurationConstant.POLL_CHANNEL.getKey(), GuildConfiguration.this::setPoll_channel_id);
     }};
 
-    private Map<String, Supplier<String>> getters = new HashMap<>() {{
+    protected Map<String, Supplier<String>> getters = new HashMap<>() {{
         put(GuildConfigurationConstant.UPVOTE_EMOJI.getKey(), GuildConfiguration.this::getUpvote_emoji);
         put(GuildConfigurationConstant.DOWNVOTE_EMOJI.getKey(), GuildConfiguration.this::getDownvote_emoji);
         put(GuildConfigurationConstant.MODERATE_EMOJI.getKey(), GuildConfiguration.this::getModerate_emoji);
@@ -108,7 +108,7 @@ public class GuildConfiguration {
 
     @DynamoDbIgnore
     public void setSetters(Map<String, Consumer<String>> setters) {
-        this.setters = setters;
+        this.setters = Map.copyOf(setters);
     }
 
     @DynamoDbIgnore

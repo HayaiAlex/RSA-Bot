@@ -22,25 +22,26 @@ import static org.rsa.util.ConversionUtil.parseIntFromString;
 public class ReactionAddedListener extends ListenerAdapter {
     private static final int REQUIRED_REACTIONS_FOR_MODERATION = 2;
     private static final int REQUIRED_REPUTATION_FOR_MODERATION = 200;
+    private static final ReputationManager REPUTATION_MANAGER = new ReputationManager();
 
     private static void giveUpvote(MessageReactionAddEvent event)
     {
         String guildId = event.getGuild().getId();
         GuildConfiguration guildConfiguration = GuildConfigurationManager.fetch(guildId);
-        UserReputation receiverUserReputation = ReputationManager.fetch(guildId, event.getMessageAuthorId());
+        UserReputation receiverUserReputation = REPUTATION_MANAGER.fetch(guildId, event.getMessageAuthorId());
 
         receiverUserReputation.setReceived_post_upvotes(receiverUserReputation.getReceived_post_upvotes() + 1);
         receiverUserReputation.setReputation(receiverUserReputation.getReputation() + parseIntFromString(guildConfiguration.getValue(GuildConfigurationConstant.UPVOTE_RECEIVED.getKey())));
 
-        ReputationManager.update(receiverUserReputation);
+        REPUTATION_MANAGER.update(receiverUserReputation);
     }
 
     private static void giveDownvote(MessageReactionAddEvent event)
     {
         String guildId = event.getGuild().getId();
         GuildConfiguration guildConfiguration = GuildConfigurationManager.fetch(guildId);
-        UserReputation receiverUserReputation = ReputationManager.fetch(guildId, event.getMessageAuthorId());
-        UserReputation giverUserReputation = ReputationManager.fetch(guildId, event.getUserId());
+        UserReputation receiverUserReputation = REPUTATION_MANAGER.fetch(guildId, event.getMessageAuthorId());
+        UserReputation giverUserReputation = REPUTATION_MANAGER.fetch(guildId, event.getUserId());
 
         receiverUserReputation.setReceived_post_downvotes(receiverUserReputation.getReceived_post_downvotes() + 1);
         receiverUserReputation.setReputation(receiverUserReputation.getReputation() + parseIntFromString(guildConfiguration.getValue(GuildConfigurationConstant.DOWNVOTE_RECEIVED.getKey())));
@@ -48,8 +49,8 @@ public class ReactionAddedListener extends ListenerAdapter {
         giverUserReputation.setGiven_post_downvotes(receiverUserReputation.getGiven_post_downvotes() + 1);
         giverUserReputation.setReputation(giverUserReputation.getReputation() + parseIntFromString(guildConfiguration.getValue(GuildConfigurationConstant.DOWNVOTE_GIVEN.getKey())));
 
-        ReputationManager.update(receiverUserReputation);
-        ReputationManager.update(giverUserReputation);
+        REPUTATION_MANAGER.update(receiverUserReputation);
+        REPUTATION_MANAGER.update(giverUserReputation);
     }
 
     private static boolean findRole(Member member, String roleId)
@@ -66,7 +67,7 @@ public class ReactionAddedListener extends ListenerAdapter {
 
         if (users.size() < REQUIRED_REACTIONS_FOR_MODERATION) return;
 
-        UserReputation reactorReputation = ReputationManager.fetch(event.getGuild().getId(), event.getUserId());
+        UserReputation reactorReputation = REPUTATION_MANAGER.fetch(event.getGuild().getId(), event.getUserId());
         if (reactorReputation.getReputation() < REQUIRED_REPUTATION_FOR_MODERATION
                 && !findRole(Objects.requireNonNull(event.getMember()), guildConfiguration.getModerator_role_id()))
         {
@@ -76,22 +77,22 @@ public class ReactionAddedListener extends ListenerAdapter {
 
         for (User user : users)
         {
-            UserReputation reputation = ReputationManager.fetch(event.getGuild().getId(), user.getId());
+            UserReputation reputation = REPUTATION_MANAGER.fetch(event.getGuild().getId(), user.getId());
             Member member = event.getGuild().retrieveMember(user).complete();
             boolean isModerator = findRole(Objects.requireNonNull(member), guildConfiguration.getModerator_role_id());
 
             if (reputation.getReputation() < REQUIRED_REPUTATION_FOR_MODERATION && !isModerator) continue;
 
             reputation.setGiven_spam_flags(reputation.getGiven_spam_flags() + 1);
-            ReputationManager.update(reputation);
+            REPUTATION_MANAGER.update(reputation);
         }
 
         // Handling reputation of spam flag recipient
         String authorId = event.getMessageAuthorId();
-        UserReputation reputation = ReputationManager.fetch(event.getGuild().getId(), authorId);
+        UserReputation reputation = REPUTATION_MANAGER.fetch(event.getGuild().getId(), authorId);
         reputation.setReputation(reputation.getReputation() + parseIntFromString(guildConfiguration.getValue(GuildConfigurationConstant.QUESTION_MODERATED.getKey())));
         reputation.setReceived_spam_flags(reputation.getReceived_spam_flags() + 1);
-        ReputationManager.update(reputation);
+        REPUTATION_MANAGER.update(reputation);
 
         event.getChannel().asThreadChannel().delete().queue();
     }

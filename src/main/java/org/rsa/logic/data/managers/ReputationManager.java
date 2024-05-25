@@ -11,7 +11,7 @@ public final class ReputationManager {
     private final static String TABLE_NAME = "reputation_data";
     private final static RequestsManager<UserReputation> _requestsManager = new RequestsManager<>(TABLE_NAME, UserReputation.class);
 
-    public static UserReputation fetch(String guildId, String userId)
+    public UserReputation fetch(String guildId, String userId)
     {
         QueryConditional queryConditional = QueryConditional
                 .keyEqualTo(Key.builder()
@@ -20,11 +20,12 @@ public final class ReputationManager {
                         .build());
         Optional<Page<UserReputation>> optionalUserReputationPage = _requestsManager.fetchSingleItem(queryConditional);
 
-        if (optionalUserReputationPage.isEmpty() || optionalUserReputationPage.get().items().isEmpty()) return new UserReputation(guildId, userId);
+        if (optionalUserReputationPage.isEmpty() || optionalUserReputationPage.get().items().isEmpty())
+            return new UserReputation(guildId, userId);
         return optionalUserReputationPage.get().items().get(0);
     }
 
-    public static void update(UserReputation userReputation)
+    public void update(UserReputation userReputation)
     {
         _requestsManager.enqueueItemUpdate(userReputation);
     }
